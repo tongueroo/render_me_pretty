@@ -39,7 +39,7 @@ erb = RenderMePretty::Erb.new("/path/to/tempate.erb", a: 3) }
 erb.render(a: 4)
 ```
 
-A few more examples are in the [erb_spec.rb](lib/render_me_pretty/erb_spec.rb)
+A few more examples are in the [erb_spec.rb](spec/lib/render_me_pretty/erb_spec.rb)
 
 ## Installation
 
