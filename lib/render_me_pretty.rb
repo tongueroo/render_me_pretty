@@ -76,15 +76,14 @@ module RenderMePretty
       handle_exception(e)
     end
 
+    # How to know where ERB stopped? - https://www.ruby-forum.com/topic/182051
+    # syntax errors have the (erb):xxx info in e.message
+    # undefined variables have (erb):xxx info in e.backtrace
     def handle_exception(e)
-      # raise e
-
-      # how to know where ERB stopped? - https://www.ruby-forum.com/topic/182051
-      # syntax errors have the (erb):xxx info in e.message
-      # undefined variables have (erb):xxx info in e.backtrac
       error_info = e.message.split("\n").grep(/\(erb\)/)[0]
       error_info ||= e.backtrace.grep(/\(erb\)/)[0]
       raise unless error_info # unable to find the (erb):xxx: error line
+
       line = error_info.split(':')[1].to_i
       io = StringIO.new
       io.puts "Error evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{@path.sub(/^\.\//, '')}"
