@@ -12,7 +12,11 @@ describe RenderMePretty do
       end
       it "#render" do
         out = erb.render
+        puts out
         expect(out).to include "a: 1"
+        # test helper methods also
+        expect(out).to include "my_helper: my_helper value"
+        expect(out).to include "hello test: hello tung"
       end
     end
 
