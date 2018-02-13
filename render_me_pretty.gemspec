@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Tung Nguyen"]
   spec.email         = ["tongueroo@gmail.com"]
 
-  spec.summary       = %q{Render ERB template and provide more useful backtrace pointing out the ERB error}
+  spec.summary       = %q{Render ERB template and provide more useful message pointing out the line with the error in the view}
   spec.homepage      = "https://github.com/tongueroo/render_me_pretty"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
