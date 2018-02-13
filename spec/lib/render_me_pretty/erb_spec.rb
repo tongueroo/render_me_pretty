@@ -7,9 +7,7 @@ describe RenderMePretty do
     let(:path) { "spec/fixtures/valid.erb" }
 
     context "initial variables" do
-      let(:erb) do
-        RenderMePretty::Erb.new(path, a: 1)
-      end
+      let(:erb) { RenderMePretty::Erb.new(path, a: 1) }
       it "#render" do
         out = erb.render
         puts out
@@ -21,9 +19,7 @@ describe RenderMePretty do
     end
 
     context "render time variables" do
-      let(:erb) do
-        RenderMePretty::Erb.new(path)
-      end
+      let(:erb) { RenderMePretty::Erb.new(path) }
       it "#render" do
         out = erb.render(a: 2)
         expect(out).to include "a: 2"
@@ -31,13 +27,20 @@ describe RenderMePretty do
     end
 
     context "both initial and render time variables" do
-      let(:erb) do
-        RenderMePretty::Erb.new(path, a: 3)
-      end
+      let(:erb) { RenderMePretty::Erb.new(path, a: 3) }
       it "#render" do
         out = erb.render(a: 4)
         expect(out).to include "a: 4"
       end
+    end
+  end
+
+  context "invalid" do
+    let(:path) { "spec/fixtures/invalid.erb" }
+    let(:erb) { RenderMePretty::Erb.new(path) }
+    it "#render" do
+      out = erb.render
+      puts out
     end
   end
 end
