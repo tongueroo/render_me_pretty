@@ -39,6 +39,12 @@ erb = RenderMePretty::Erb.new("/path/to/tempate.erb", a: 3) }
 erb.render(a: 4)
 ```
 
+There's also a convenience class method:
+
+```ruby
+RenderMePretty.result("/path/to/tempate.erb", a: 5)
+```
+
 A few more examples are in the [erb_spec.rb](spec/lib/render_me_pretty/erb_spec.rb)
 
 ## Installation
