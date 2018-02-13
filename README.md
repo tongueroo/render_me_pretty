@@ -35,8 +35,7 @@ The output also colorizes the error line in red so it stands out.
 Here's a simple example:
 
 ```ruby
-path = "/path/to/tempate.erb"
-erb = RenderMePretty::Erb.new(path, a: 3) }
+erb = RenderMePretty::Erb.new("/path/to/tempate.erb", a: 3) }
 erb.render(a: 4)
 ```
 
