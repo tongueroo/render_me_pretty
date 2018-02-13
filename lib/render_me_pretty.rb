@@ -3,36 +3,66 @@ require "tilt/erb"
 require "active_support/core_ext/string"
 
 =begin
-Usage examples:
+## Usage examples:
 
-Variables at initialization:
+Given an example template /path/to/template.erb that contains:
+
+  a: <%= @a %>
+
+### Variables at initialization
 
   erb = RenderMePretty::Erb.new("/path/to/template.erb", a: 1)
   erb.render
 
-Variables at render time:
+Result: a: 1
+
+### Variables at render time
 
   erb = RenderMePretty::Erb.new("/path/to/template.erb")
-  erb.render(a: 1)
+  erb.render(a: 2)
 
-Variables at both initialization and render time:
+Result: a: 2
 
-  erb = RenderMePretty::Erb.new("/path/to/template.erb", a: 1)
-  erb.render(a: "override", b: 3)
+### Variables at both initialization and render time:
 
-Helpers for context:
+  erb = RenderMePretty::Erb.new("/path/to/template.erb", a: 3)
+  erb.render(a: "override", a: 4)
 
-  RenderMePretty::Context.helpers_path!("lib/helpers")
-    # Loads modules defined in lib/helpers folder and adds their methods
-    # as helper methods to the context provided to the render call.
-    # The helper classes must be defined like so FooHelper and foo_helper.rb.
+Result: a: 4
+
+Variables at render time will override variables at initialization time.
+
+## Context Helpers
+
+When no context is provided, a built-in context object is created. You can add helpers to the built-in context object with:
+
+  RenderMePretty::Context.load_helpers("lib/helpers")
+
+This loads modules defined in `lib/helpers` folder and adds their methods of the built-in context object. The helper classes must be defined with the following convetion: FooHelper and foo_helper.rb.
+
+Note, helpers will only work with the built-in context scope.  If you are passing in your own context object to be used, then you should handle adding helper methods to that context object yourself.
+
+## Custom Context Scope
+
+A built-in context object is provided for convenience. If you want to use your own context object, pass it as a variable.  The context variable is specially treated as a context object.  Example:
+
+  person = Person.new
+  erb = RenderMePretty::Erb.new("/path/to/template.erb")
+  erb.render(context: person, a: 2)
+
+The context will be `person`.  So person methods and instance variables will be available in the ERB templates.
+
 =end
 module RenderMePretty
   class Erb
     def initialize(path, variables={})
       @path = path
       @variables = variables
-      @context = variables[:context] || Context.new(variables)
+      if variables[:context]
+        @context = variables.delete(:context)
+      else
+        @context = Context.new(variables)
+      end
     end
 
     def render(override_vars={})
@@ -56,14 +86,9 @@ module RenderMePretty
       end
     end
 
-    # dont think I need this for tilt???
-    # def get_binding
-    #   binding
-    # end
-
-    def self.load_helpers(base)
-      Dir.glob("#{base}/**/*_helper.rb").each do |path|
-        relative_path = path.sub("#{base}/", "")
+    def self.load_helpers(base_folder)
+      Dir.glob("#{base_folder}/**/*_helper.rb").each do |path|
+        relative_path = path.sub("#{base_folder}/", "")
         class_name = File.basename(relative_path, '.rb').classify
 
         require path
