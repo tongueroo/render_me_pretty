@@ -39,7 +39,7 @@ describe RenderMePretty do
     let(:erb) { RenderMePretty::Erb.new(path) }
     it "#render" do
       out = erb.render
-      # puts out
+      puts out
       expect(out).to include("2 <%= sdsd %>")
     end
   end

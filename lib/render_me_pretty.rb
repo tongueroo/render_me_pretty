@@ -83,7 +83,7 @@ module RenderMePretty
 
       line = error_info.split(':')[1].to_i
       io = StringIO.new
-      io.puts "Error evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{@path.sub(/^\.\//, '')}"
+      io.puts "#{e.class} evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{@path.sub(/^\.\//, '')}"
 
       template = IO.read(@path)
       template_lines = template.split("\n")
