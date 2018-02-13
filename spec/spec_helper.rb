@@ -1,3 +1,5 @@
+ENV['TEST'] = '1'
+
 require "./lib/render_me_pretty"
 
 RSpec.configure do |config|
