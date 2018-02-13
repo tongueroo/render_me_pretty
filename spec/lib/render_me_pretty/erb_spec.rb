@@ -12,7 +12,7 @@ describe RenderMePretty do
     context "valid" do
       it "#render" do
         out = erb.render
-        # puts out
+        puts out
         expect(out).to include "my_helper value"
       end
     end

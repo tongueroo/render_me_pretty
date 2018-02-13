@@ -32,7 +32,7 @@ module RenderMePretty
     def initialize(path, variables={})
       @path = path
       @variables = variables
-      @context = Context.new(variables)
+      @context = variables[:context] || Context.new(variables)
     end
 
     def render(override_vars={})
