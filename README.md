@@ -1,6 +1,14 @@
 # Render Me Pretty
 
-Let's say you have an error in your ERB template: [spec/fixtures/invalid.erb](spec/fixtures/invalid.erb).  Normally, when render it with ERB you get an error message that looks something like this:
+Let's say you have an error in your ERB template:
+
+```
+line 1
+<%= sdsd %>
+line 3
+```
+
+Normally, when render it with ERB you get an error message that looks something like this:
 
 ```sh
  NameError:
