@@ -98,6 +98,13 @@ module RenderMePretty
           io.printf("%#{spacing}d %s\n", line_number, line_content)
         end
       end
+
+      # Append the original stack trace also
+      io.puts("\nOriginal backtrace (last 5 lines):")
+      lines = ENV['FULL_STACK_TRACE'] ? e.backtrace : e.backtrace[0..4]
+      io.write(lines.join("\n"))
+      io.puts("\nRe-run with FULL_STACK_TRACE=1 to see all lines")
+
       if ENV['TEST']
         io.string
       else
