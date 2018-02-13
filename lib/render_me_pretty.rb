@@ -1,5 +1,4 @@
 require "render_me_pretty/version"
-require "tilt/erb"
 require "active_support/core_ext/string"
 require "colorize"
 
@@ -68,11 +67,9 @@ module RenderMePretty
 
     def render(override_vars={})
       @context.override_variables!(override_vars)
-      # template = Tilt::ERBTemplate.new(@path)
-      # template.render(@context)
       template = IO.read(@path)
       ERB.new(template, nil, "-").result(@context.get_binding)
-    rescue NameError => e
+    rescue Exception => e
       handle_exception(e)
     end
 
