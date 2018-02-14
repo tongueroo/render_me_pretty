@@ -88,9 +88,11 @@ module RenderMePretty
       # first line of the baacktrace for Tilt has the line number
       # spec/fixtures/invalid.erb:2:in `block in singleton class'
       error_info = e.backtrace[0]
-      line = error_info.split(':')[1].to_i
-      puts "line #{line}"
+      error_line_number = error_info.split(':')[1].to_i
+      pretty_error(e, error_line_number)
+    end
 
+    def pretty_error(e, line)
       pretty_path = @path.sub(/^\.\//, '')
       io = StringIO.new
       io.puts "#{e.class}: #{e.message}"
