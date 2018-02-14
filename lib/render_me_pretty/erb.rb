@@ -95,11 +95,7 @@ module RenderMePretty
         end
       end
 
-      # Append the original stack trace also
-      io.puts("\nOriginal backtrace (last 5 lines):")
-      lines = ENV['FULL_STACK_TRACE'] ? e.backtrace : e.backtrace[0..4]
-      io.write(lines.join("\n"))
-      io.puts("\nRe-run with FULL_STACK_TRACE=1 to see all lines")
+      io.puts backtrace_lines(e)
 
       if ENV['TEST']
         io.string
@@ -107,6 +103,42 @@ module RenderMePretty
         puts io.string
         exit 1
       end
+    end
+
+    # Method produces a filtered original stack trace that can be appended to
+    # the pretty backtrace output.
+    #
+    # It parses the original backtrace that looks something like this:
+    #
+    #   (erb):380:in `get_binding'
+    #   /Users/tung/.rbenv/versions/2.5.0/lib/ruby/2.5.0/erb.rb:885:in `eval'
+    #   /Users/tung/.rbenv/versions/2.5.0/lib/ruby/2.5.0/erb.rb:885:in `result'
+    #   /Users/tung/src/tongueroo/lono/vendor/render_me_pretty/lib/render_me_pretty/erb.rb:67:in `render'
+    #   /Users/tung/src/tongueroo/lono/vendor/render_me_pretty/lib/render_me_pretty.rb:11:in `result'
+    #   /Users/tung/src/tongueroo/lono/lib/lono/template/template.rb:32:in `build'
+    #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:82:in `block in build_templates'
+    #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:81:in `each'
+    def backtrace_lines(e)
+      full = ENV['FULL_STACK_TRACE']
+      if full
+        lines = e.backtrace
+      else
+        lines = e.backtrace
+        # filter out internal lines
+        removal_index = lines.find_index { |l| l =~ %r[lib/render_me_pretty] }
+        lines = lines[removal_index..-1] # remove leading lines above the lib/
+          # render_me_pretty lines by keeping lines past the removal index
+        lines.reject! { |l| l =~ %r[lib/render_me_pretty] } # now filter out
+          # render_me_pretty lines
+        lines = lines[0..7] # keep 8 lines
+        lines[0] = lines[0].colorize(:red)
+      end
+
+      # header
+      lines.unshift "\nOriginal filtered backtrace#{full ? '' : ' (last 8 lines)'}:"
+      # footer
+      lines << "\nRe-run with FULL_STACK_TRACE=1 to see all lines"
+      lines.join("\n")
     end
   end
 end
