@@ -49,6 +49,8 @@ A built-in context object is provided for convenience. If you want to use your o
 The context will be `person`.  So person methods and instance variables will be available in the ERB templates.
 
 =end
+require 'tilt/erb'
+
 module RenderMePretty
   class Erb
     def initialize(path, variables={})
@@ -62,24 +64,37 @@ module RenderMePretty
     end
 
     def render(override_vars={})
+      # override_variables does not exist in custom context classes
+      # so this is a bad design.
       @context.override_variables!(override_vars)
-      template = IO.read(@path)
-      ERB.new(template, nil, "-").result(@context.get_binding)
+
+      template = Tilt::ERBTemplate.new(@path)
+      template.render(@context)
     rescue Exception => e
       handle_exception(e)
     end
 
-    # How to know where ERB stopped? - https://www.ruby-forum.com/topic/182051
-    # syntax errors have the (erb):xxx info in e.message
-    # undefined variables have (erb):xxx info in e.backtrace
-    def handle_exception(e)
-      error_info = e.message.split("\n").grep(/\(erb\)/)[0]
-      error_info ||= e.backtrace.grep(/\(erb\)/)[0]
-      raise unless error_info # unable to find the (erb):xxx: error line
+    # def render(override_vars={})
+    #   @context.override_variables!(override_vars)
+    #   puts "@context #{@context.inspect}"
+    #   template = IO.read(@path)
+    #   ERB.new(template, nil, "-").result(@context.get_binding)
+    # rescue Exception => e
+    #   handle_exception(e)
+    # end
 
+    # handles Tilt error
+    def handle_exception(e)
+      # first line of the baacktrace for Tilt has the line number
+      # spec/fixtures/invalid.erb:2:in `block in singleton class'
+      error_info = e.backtrace[0]
       line = error_info.split(':')[1].to_i
+      puts "line #{line}"
+
+      pretty_path = @path.sub(/^\.\//, '')
       io = StringIO.new
-      io.puts "#{e.class} evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{@path.sub(/^\.\//, '')}"
+      io.puts "#{e.class}: #{e.message}"
+      io.puts "Error evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{pretty_path}:"
 
       template = IO.read(@path)
       template_lines = template.split("\n")

@@ -17,6 +17,8 @@ module RenderMePretty
       binding
     end
 
+    # Strips the base_folder and what is left is a relative path.
+    # This is how we can handle namespaced helpers.
     def self.load_helpers(base_folder)
       Dir.glob("#{base_folder}/**/*_helper.rb").each do |path|
         relative_path = path.sub("#{base_folder}/", "")
