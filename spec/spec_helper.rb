@@ -1,6 +1,7 @@
 ENV['TEST'] = '1'
 
 require "./lib/render_me_pretty"
+require "./spec/test_context"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

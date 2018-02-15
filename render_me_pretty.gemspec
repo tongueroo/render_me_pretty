@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activesupport"
   spec.add_dependency "colorize"
+  spec.add_dependency "tilt"
 
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake"

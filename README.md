@@ -45,6 +45,26 @@ There's also a convenience class method:
 RenderMePretty.result("/path/to/tempate.erb", a: 5)
 ```
 
+### Custom Context
+
+```ruby
+person = Person.new("tung")
+erb = RenderMePretty::Erb.new("/path/to/tempate.erb", a: 3, context: person) } # passing context here
+erb.render(a: 4)
+
+person = Person.new("tung")
+erb = RenderMePretty::Erb.new("/path/to/tempate.erb", a: 3) }
+erb.render(person, a: 4) # passing context here
+```
+
+The context's methods and instance variables are available in the ERB template. Variables passed at initialization time to `RenderMePretty::Erb.new` or at call time for `render` be set as instance variables to a clone of the original context object.
+
+So in the case above, if there was an `@a` instance variable in the Person object, it will not get respected. Instead the value would be `@a = 4`.
+
+### Context
+
+You can pass in a context object also.  Examples:
+
 A few more examples are in the [erb_spec.rb](spec/lib/render_me_pretty/erb_spec.rb)
 
 ## Installation

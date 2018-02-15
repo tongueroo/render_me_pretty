@@ -28,19 +28,9 @@ Result: a: 4
 
 Variables at render time will override variables at initialization time.
 
-## Context Helpers
+## Context Scope
 
-When no context is provided, a built-in context object is created. You can add helpers to the built-in context object with:
-
-  RenderMePretty::Context.load_helpers("lib/helpers")
-
-This loads modules defined in `lib/helpers` folder and adds their methods of the built-in context object. The helper classes must be defined with the following convetion: FooHelper and foo_helper.rb.
-
-Note, helpers will only work with the built-in context scope.  If you are passing in your own context object to be used, then you should handle adding helper methods to that context object yourself.
-
-## Custom Context Scope
-
-A built-in context object is provided for convenience. If you want to use your own context object, pass it as a variable.  The context variable is specially treated as a context object.  Example:
+If you want to use your own context object, pass it as a variable.  The context variable is specially treated as a context object.  Example:
 
   person = Person.new # must implement get_binding
   erb = RenderMePretty::Erb.new("/path/to/template.erb")
@@ -55,33 +45,36 @@ module RenderMePretty
   class Erb
     def initialize(path, variables={})
       @path = path
-      @variables = variables
-      if variables[:context]
-        @context = variables.delete(:context)
-      else
-        @context = Context.new(variables)
-      end
+      @init_vars = variables
+      @context = variables.delete(:context)
     end
 
-    def render(override_vars={})
-      # override_variables does not exist in custom context classes
-      # so this is a bad design.
-      @context.override_variables!(override_vars)
+    # Usage:
+    #
+    #   render(context, a: 1, b: 2)
+    #   render(a: 1, b: 2)
+    #   render
+    def render(*args)
+      if args.last.is_a?(Hash)
+        render_vars = args.pop
+        @init_vars = @init_vars.merge(render_vars)
+      end
+      context = args[0]
+      context ||= @context || Object.new
+
+      context = context.clone # so we dont stomp the original object
+      # override context's instance variables with init and render vars.
+      @init_vars.each do |key, value|
+        context.instance_variable_set('@' + key.to_s, value)
+      end
 
       template = Tilt::ERBTemplate.new(@path)
-      template.render(@context)
-    rescue Exception => e
-      handle_exception(e)
+      begin
+        template.render(context)
+      rescue Exception => e
+        handle_exception(e)
+      end
     end
-
-    # def render(override_vars={})
-    #   @context.override_variables!(override_vars)
-    #   puts "@context #{@context.inspect}"
-    #   template = IO.read(@path)
-    #   ERB.new(template, nil, "-").result(@context.get_binding)
-    # rescue Exception => e
-    #   handle_exception(e)
-    # end
 
     # handles Tilt error
     def handle_exception(e)
@@ -136,7 +129,7 @@ module RenderMePretty
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:82:in `block in build_templates'
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:81:in `each'
     def backtrace_lines(e)
-      full = ENV['FULL_STACK_TRACE']
+      full = ENV['FULL_BACKTRACE']
       if full
         lines = e.backtrace
       else
