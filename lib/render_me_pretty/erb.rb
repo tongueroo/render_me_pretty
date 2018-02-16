@@ -144,20 +144,24 @@ module RenderMePretty
         lines = e.backtrace
       else
         lines = e.backtrace
+        # This filtering business makes is hiding useful info.
+        # Think it was needed for ERB but Tilt provides a better stack trace.
+        # Commenting out for now.
+
         # filter out internal lines
-        removal_index = lines.find_index { |l| l =~ %r[lib/render_me_pretty] }
-        lines = lines[removal_index..-1] # remove leading lines above the lib/
+        # removal_index = lines.find_index { |l| l =~ %r[lib/render_me_pretty] }
+        # lines = lines[removal_index..-1] # remove leading lines above the lib/
           # render_me_pretty lines by keeping lines past the removal index
-        lines.reject! { |l| l =~ %r[lib/render_me_pretty] } # now filter out
+        # lines.reject! { |l| l =~ %r[lib/render_me_pretty] } # now filter out
           # render_me_pretty lines
         lines = lines[0..7] # keep 8 lines
-        lines[0] = lines[0].colorize(:red)
       end
+      lines[0] = lines[0].colorize(:red)
 
       # header
-      lines.unshift "\nOriginal filtered backtrace#{full ? '' : ' (last 8 lines)'}:"
+      lines.unshift "\nOriginal backtrace#{full ? '' : ' (last 8 lines)'}:"
       # footer
-      lines << "\nRe-run with FULL_STACK_TRACE=1 to see all lines"
+      lines << "\nRe-run with FULL_BACKTRACE=1 to see all lines"
       lines.join("\n")
     end
   end
