@@ -78,12 +78,22 @@ module RenderMePretty
 
     # handles Tilt error
     def handle_exception(e)
-      # first line of the baacktrace for Tilt has the line number
-      # spec/fixtures/invalid.erb:2:in `block in singleton class'
-      error_info = e.backtrace[0]
-      error_line_number = error_info.split(':')[1].to_i
+      error_line = find_template_error_line(e.backtrace)
+      error_line_number = error_line.split(':')[1].to_i
       pretty_error(e, error_line_number)
     end
+
+    # For Tilt, first line of the baacktrace that contains the path of the file
+    # we're rendeirng has the line number. Example:
+    #
+    #   spec/fixtures/invalid.erb:2:in `block in singleton class'
+    #   error_info = e.backtrace[0]
+    def find_template_error_line(lines)
+      lines.select do |line|
+        line.include?(@path)
+      end.first
+    end
+
 
     def pretty_error(e, line)
       pretty_path = @path.sub(/^\.\//, '')
