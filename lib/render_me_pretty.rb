@@ -4,9 +4,8 @@ require "colorize"
 
 module RenderMePretty
   autoload :Erb, 'render_me_pretty/erb'
-  autoload :Context, 'render_me_pretty/context'
 
-  def self.result(path, variables={})
+  def result(path, variables={})
     erb = Erb.new(path, variables)
     erb.render
   end
