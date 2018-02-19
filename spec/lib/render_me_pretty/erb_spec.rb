@@ -40,12 +40,30 @@ describe RenderMePretty do
   end
 
   context "invalid" do
-    let(:path) { "spec/fixtures/invalid.erb" }
     let(:erb) { RenderMePretty::Erb.new(path) }
-    it "#render" do
-      out = erb.render(context)
-      # puts out
-      expect(out).to include("2 <%= sdsd %>")
+
+    context "variable" do
+      let(:path) { "spec/fixtures/invalid/variable.erb" }
+      it "#render" do
+        out = erb.render(context)
+        # puts out
+        expect(out).to include("2 <%= breakme %>")
+      end
+    end
+
+    context "syntax" do
+      let(:path) { "spec/fixtures/invalid/syntax.erb" }
+      it "#render" do
+        out = erb.render(context)
+        # puts out
+        # spec/fixtures/invalid/syntax.erb:2: syntax error, unexpected ';', expecting ']'
+        # );  if ENV['TEST' ; _erbout.<<(-" missing ending...
+                          # ^
+        # spec/fixtures/invalid/syntax.erb:12: syntax error, unexpected keyword_end, expecting end-of-input
+        # end;end;end;end
+                    # ^~~
+        expect(out).to include("ENV['TEST' ")
+      end
     end
   end
 end

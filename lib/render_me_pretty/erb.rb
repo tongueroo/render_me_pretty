@@ -43,6 +43,9 @@ require 'tilt/erb'
 
 module RenderMePretty
   class Erb
+    autoload :BaseHandler, 'render_me_pretty/erb/base_handler'
+    autoload :SyntaxErrorHandler, "render_me_pretty/erb/syntax_error_handler"
+
     def initialize(path, variables={})
       @path = path
       @init_vars = variables
@@ -76,11 +79,29 @@ module RenderMePretty
       end
     end
 
-    # handles Tilt error
+    # Handles Tilt error in prettier manner.
+    #
+    # When there's a syntax error Tilt does not include the line nubmer of the
+    # error in the backtrace it is instead included in the e.message itself.
+    #
+    # When for other errors the line_number is included in the backtrace.
+    #
+    # Refer to specs and uncomment puts out to see the different types of errors.
     def handle_exception(e)
-      error_line = find_template_error_line(e.backtrace)
-      error_line_number = error_line.split(':')[1].to_i
-      pretty_error(e, error_line_number)
+      # puts "*" * 30
+      # puts e.class.to_s.colorize(:cyan)
+      # puts e.message.colorize(:cyan)
+      # puts e.backtrace
+      # puts "*" * 30
+      if e.is_a?(SyntaxError)
+        handler = SyntaxErrorHandler.new(@path, e)
+        io = handler.handle
+      else
+        error_line = find_template_error_line(e.backtrace)
+        error_line_number = error_line.split(':')[1].to_i
+        io = pretty_error(e, error_line_number)
+      end
+      print_result(io)
     end
 
     # For Tilt, first line of the baacktrace that contains the path of the file
@@ -89,11 +110,11 @@ module RenderMePretty
     #   spec/fixtures/invalid.erb:2:in `block in singleton class'
     #   error_info = e.backtrace[0]
     def find_template_error_line(lines)
-      lines.select do |line|
+      l = lines.select do |line|
         line.include?(@path)
       end.first
+      l
     end
-
 
     def pretty_error(e, line)
       pretty_path = @path.sub(/^\.\//, '')
@@ -116,7 +137,10 @@ module RenderMePretty
       end
 
       io.puts backtrace_lines(e)
+      io
+    end
 
+    def print_result(io)
       if ENV['TEST']
         io.string
       else
