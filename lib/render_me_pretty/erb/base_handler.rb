@@ -5,6 +5,11 @@ class RenderMePretty::Erb
       @exception = exception
     end
 
+    def handle
+      line_number = find_line_number
+      pretty_trace(line_number, full_message=true) # returns StringIO
+    end
+
     def pretty_trace(error_line_number, full_message=true)
       io = StringIO.new
 
@@ -12,7 +17,7 @@ class RenderMePretty::Erb
       io.puts "#{@exception.class}#{message}".colorize(:red)
 
       pretty_path = @path.sub(/^\.\//, '')
-      io.puts "Error evaluating ERB template on line #{error_line_number.to_s.colorize(:red)} of: #{pretty_path}:"
+      io.puts "Error evaluating ERB template around line #{error_line_number.to_s.colorize(:red)} of: #{pretty_path}:"
 
       context = 5 # lines of context
       top, bottom = [error_line_number-context-1, 0].max, error_line_number+context-1

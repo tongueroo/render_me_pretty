@@ -1,10 +1,5 @@
 class RenderMePretty::Erb
   class MainErrorHandler < BaseHandler
-    def handle
-      line_number = find_line_number
-      pretty_trace(line_number, full_message=true) # returns StringIO
-    end
-
     # For general Tilt errors first line of the backtrace that contains the path
     # of the file we're rendeirng and has the line number. Example:
     #
