@@ -7,18 +7,19 @@ class RenderMePretty::Erb
 
     def pretty_trace(error_line_number, full_message=true)
       io = StringIO.new
+
       message = full_message ? ": #{@exception.message}" : ""
       io.puts "#{@exception.class}#{message}".colorize(:red)
 
       pretty_path = @path.sub(/^\.\//, '')
       io.puts "Error evaluating ERB template on line #{error_line_number.to_s.colorize(:red)} of: #{pretty_path}:"
 
-      template = IO.read(@path)
-      template_lines = template.split("\n")
       context = 5 # lines of context
       top, bottom = [error_line_number-context-1, 0].max, error_line_number+context-1
-      spacing = template_lines.size.to_s.size
-      template_lines[top..bottom].each_with_index do |line_content, index|
+
+      lines = IO.read(@path).split("\n")
+      spacing = lines.size.to_s.size
+      lines[top..bottom].each_with_index do |line_content, index|
         current_line_number = top+index+1
         if current_line_number == error_line_number
           io.printf("%#{spacing}d %s\n".colorize(:red), current_line_number, line_content)
@@ -27,7 +28,7 @@ class RenderMePretty::Erb
         end
       end
 
-      io.puts backtrace_lines(@exception)
+      io.puts backtrace_lines
       io
     end
 
@@ -44,12 +45,12 @@ class RenderMePretty::Erb
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/template.rb:32:in `build'
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:82:in `block in build_templates'
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:81:in `each'
-    def backtrace_lines(e)
+    def backtrace_lines
       full = ENV['FULL_BACKTRACE']
       if full
-        lines = e.backtrace
+        lines = @exception.backtrace
       else
-        lines = e.backtrace
+        lines = @exception.backtrace
         # This filtering business makes is hiding useful info.
         # Think it was needed for ERB but Tilt provides a better stack trace.
         # Commenting out for now.
