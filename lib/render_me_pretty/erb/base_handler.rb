@@ -5,25 +5,25 @@ class RenderMePretty::Erb
       @exception = exception
     end
 
-    def pretty_trace(line, full_message=true)
+    def pretty_trace(error_line_number, full_message=true)
       io = StringIO.new
       message = full_message ? ": #{@exception.message}" : ""
       io.puts "#{@exception.class}#{message}".colorize(:red)
 
       pretty_path = @path.sub(/^\.\//, '')
-      io.puts "Error evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{pretty_path}:"
+      io.puts "Error evaluating ERB template on line #{error_line_number.to_s.colorize(:red)} of: #{pretty_path}:"
 
       template = IO.read(@path)
       template_lines = template.split("\n")
       context = 5 # lines of context
-      top, bottom = [line-context-1, 0].max, line+context-1
+      top, bottom = [error_line_number-context-1, 0].max, error_line_number+context-1
       spacing = template_lines.size.to_s.size
       template_lines[top..bottom].each_with_index do |line_content, index|
-        line_number = top+index+1
-        if line_number == line
-          io.printf("%#{spacing}d %s\n".colorize(:red), line_number, line_content)
+        current_line_number = top+index+1
+        if current_line_number == error_line_number
+          io.printf("%#{spacing}d %s\n".colorize(:red), current_line_number, line_content)
         else
-          io.printf("%#{spacing}d %s\n", line_number, line_content)
+          io.printf("%#{spacing}d %s\n", current_line_number, line_content)
         end
       end
 
