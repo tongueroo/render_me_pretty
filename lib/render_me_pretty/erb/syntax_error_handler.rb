@@ -2,7 +2,7 @@ class RenderMePretty::Erb
   class SyntaxErrorHandler < BaseHandler
     def handle
       line_number = find_line_number
-      pretty_trace(line_number, full_message=false)
+      pretty_trace(line_number, full_message=false) # returns StringIO
     end
 
     # spec/fixtures/invalid/syntax.erb:2: syntax error, unexpected ';', expecting ']'

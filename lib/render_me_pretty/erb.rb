@@ -45,6 +45,7 @@ module RenderMePretty
   class Erb
     autoload :BaseHandler, 'render_me_pretty/erb/base_handler'
     autoload :SyntaxErrorHandler, "render_me_pretty/erb/syntax_error_handler"
+    autoload :MainErrorHandler, "render_me_pretty/erb/main_error_handler"
 
     def initialize(path, variables={})
       @path = path
@@ -93,51 +94,11 @@ module RenderMePretty
       # puts e.message.colorize(:cyan)
       # puts e.backtrace
       # puts "*" * 30
-      if e.is_a?(SyntaxError)
-        handler = SyntaxErrorHandler.new(@path, e)
-        io = handler.handle
-      else
-        error_line = find_template_error_line(e.backtrace)
-        error_line_number = error_line.split(':')[1].to_i
-        io = pretty_error(e, error_line_number)
-      end
+      handler = e.is_a?(SyntaxError) ?
+                  SyntaxErrorHandler.new(@path, e) :
+                  MainErrorHandler.new(@path, e)
+      io = handler.handle
       print_result(io)
-    end
-
-    # For Tilt, first line of the baacktrace that contains the path of the file
-    # we're rendeirng has the line number. Example:
-    #
-    #   spec/fixtures/invalid.erb:2:in `block in singleton class'
-    #   error_info = e.backtrace[0]
-    def find_template_error_line(lines)
-      l = lines.select do |line|
-        line.include?(@path)
-      end.first
-      l
-    end
-
-    def pretty_error(e, line)
-      pretty_path = @path.sub(/^\.\//, '')
-      io = StringIO.new
-      io.puts "#{e.class}: #{e.message}".colorize(:red)
-      io.puts "Error evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{pretty_path}:"
-
-      template = IO.read(@path)
-      template_lines = template.split("\n")
-      context = 5 # lines of context
-      top, bottom = [line-context-1, 0].max, line+context-1
-      spacing = template_lines.size.to_s.size
-      template_lines[top..bottom].each_with_index do |line_content, index|
-        line_number = top+index+1
-        if line_number == line
-          io.printf("%#{spacing}d %s\n".colorize(:red), line_number, line_content)
-        else
-          io.printf("%#{spacing}d %s\n", line_number, line_content)
-        end
-      end
-
-      io.puts backtrace_lines(e)
-      io
     end
 
     def print_result(io)

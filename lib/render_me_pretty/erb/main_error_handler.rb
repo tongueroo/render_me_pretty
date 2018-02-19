@@ -2,25 +2,20 @@ class RenderMePretty::Erb
   class MainErrorHandler < BaseHandler
     def handle
       line_number = find_line_number
-      pretty_trace(line_number, full_message=false)
+      pretty_trace(line_number, full_message=true) # returns StringIO
     end
 
-    # spec/fixtures/invalid/syntax.erb:2: syntax error, unexpected ';', expecting ']'
-    # );  if ENV['TEST' ; _erbout.<<(-" missing ending...
-    #                   ^
-    # spec/fixtures/invalid/syntax.erb:12: syntax error, unexpected keyword_end, expecting end-of-input
-    # end;end;end;end
-    #             ^~~
+    # For general Tilt errors first line of the backtrace that contains the path
+    # of the file we're rendeirng and has the line number. Example:
     #
-    # We will only find the first line number for the error.
+    #   spec/fixtures/invalid.erb:2:in `block in singleton class'
+    #   error_info = e.backtrace[0]
     def find_line_number
-      pattern = Regexp.new("#{@path}:(\\\d+): syntax error")
-      lines = @exception.message.split("\n")
-      found_line = lines.find do |line|
-        line.match(pattern)
-      end
-      md = found_line.match(pattern)
-      md[1].to_i # line_number
+      lines = @exception.backtrace
+      error_line = lines.select do |line|
+        line.include?(@path)
+      end.first
+      error_line.split(':')[1].to_i
     end
   end
 end
