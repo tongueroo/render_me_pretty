@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.6.0]
+- Handle SyntaxError errors correctly
+- refactor into MainErrorHandler and SyntaxError classes
+
 ## [0.5.0]
 - fix find_template_error_line
 - remove some of the filtering for backtrace lines
