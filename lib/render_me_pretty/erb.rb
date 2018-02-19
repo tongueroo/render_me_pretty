@@ -98,7 +98,7 @@ module RenderMePretty
     def pretty_error(e, line)
       pretty_path = @path.sub(/^\.\//, '')
       io = StringIO.new
-      io.puts "#{e.class}: #{e.message}"
+      io.puts "#{e.class}: #{e.message}".colorize(:red)
       io.puts "Error evaluating ERB template on line #{line.to_s.colorize(:red)} of: #{pretty_path}:"
 
       template = IO.read(@path)
