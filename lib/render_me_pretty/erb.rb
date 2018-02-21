@@ -76,7 +76,11 @@ module RenderMePretty
       begin
         template.render(context)
       rescue Exception => e
-        handle_exception(e)
+        if e.class == SystemExit # allow exit to happen normally
+          raise
+        else
+          handle_exception(e)
+        end
       end
     end
 
