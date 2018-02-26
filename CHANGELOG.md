@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.7.1]
+- trim - mode
+
 ## [0.7.0]
 - allow normal exit
 - show full error message for syntax error
