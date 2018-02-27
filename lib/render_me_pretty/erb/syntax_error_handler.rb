@@ -1,5 +1,3 @@
-require "byebug" if ENV['USER'] == 'tung'
-
 class RenderMePretty::Erb
   class SyntaxErrorHandler < BaseHandler
     # spec/fixtures/invalid/syntax.erb:2: syntax error, unexpected ';', expecting ']'
