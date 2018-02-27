@@ -66,4 +66,47 @@ describe RenderMePretty do
       end
     end
   end
+
+  context "valid layout" do
+    let(:erb) do
+      RenderMePretty::Erb.new(path, layout: layout)
+    end
+    let(:path) { "spec/fixtures/layout/valid/child.erb" }
+    let(:layout) { "spec/fixtures/layout/valid/parent.erb" }
+
+    it "render with layout" do
+      out = erb.render(context)
+      # puts out # uncomment to debug
+      expect(out).to include("top of file")
+      expect(out).to include("child template")
+    end
+  end
+
+  context "invalid child in layout" do
+    let(:erb) do
+      RenderMePretty::Erb.new(path, layout: layout)
+    end
+    let(:path) { "spec/fixtures/layout/invalid/child.erb" }
+    let(:layout) { "spec/fixtures/layout/valid/parent.erb" }
+
+    it "shows the exact line of error in template" do
+      out = erb.render(context)
+      # puts out # uncomment to debug
+      expect(out).to include("1 <%= break_me_in_child %>")
+    end
+  end
+
+  context "invalid parent layout" do
+    let(:erb) do
+      RenderMePretty::Erb.new(path, layout: layout)
+    end
+    let(:path) { "spec/fixtures/layout/valid/child.erb" }
+    let(:layout) { "spec/fixtures/layout/invalid/parent.erb" }
+
+    it "shows the exact line of error in template" do
+      out = erb.render(context)
+      puts out # uncomment to debug
+      # expect(out).to include("1 <%= break_me_in_child %>")
+    end
+  end
 end

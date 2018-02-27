@@ -51,6 +51,7 @@ module RenderMePretty
       @path = path
       @init_vars = variables
       @context = variables.delete(:context)
+      @layout_path = variables.delete(:layout)
     end
 
     # Usage:
@@ -72,10 +73,21 @@ module RenderMePretty
         context.instance_variable_set('@' + key.to_s, value)
       end
 
-      # trim mode: https://searchcode.com/codesearch/view/77362792/
-      template = Tilt::ERBTemplate.new(@path, trim: '-')
+      if @layout_path
+        layout = Tilt::ERBTemplate.new(@layout_path, trim: '-')
+      else
+        # trim mode: https://searchcode.com/codesearch/view/77362792/
+        template = Tilt::ERBTemplate.new(@path, trim: '-')
+      end
+
       begin
-        template.render(context)
+        if @layout_path
+          layout.render(context) do
+            Tilt::ERBTemplate.new(@path, trim: '-').render(context)
+          end
+        else
+          template.render(context)
+        end
       rescue Exception => e
         if e.class == SystemExit # allow exit to happen normally
           raise
