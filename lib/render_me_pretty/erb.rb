@@ -112,8 +112,8 @@ module RenderMePretty
       # puts e.backtrace
       # puts "*" * 30
       handler = e.is_a?(SyntaxError) ?
-                  SyntaxErrorHandler.new(@path, e) :
-                  MainErrorHandler.new(@path, e)
+                  SyntaxErrorHandler.new(e, @path, @layout_path) :
+                  MainErrorHandler.new(e, @path, @layout_path)
       io = handler.handle
       print_result(io)
     end

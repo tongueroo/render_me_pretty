@@ -8,7 +8,7 @@ class RenderMePretty::Erb
     def find_line_number
       lines = @exception.backtrace
       error_line = lines.select do |line|
-        line.include?(@path)
+        line.include?(template_path_with_error)
       end.first
       error_line.split(':')[1].to_i
     end

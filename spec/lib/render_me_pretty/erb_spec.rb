@@ -105,8 +105,8 @@ describe RenderMePretty do
 
     it "shows the exact line of error in template" do
       out = erb.render(context)
-      puts out # uncomment to debug
-      # expect(out).to include("1 <%= break_me_in_child %>")
+      # puts out # uncomment to debug
+      expect(out).to include("2 <%= break_me_in_parent %>")
     end
   end
 end
