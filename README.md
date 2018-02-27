@@ -47,6 +47,12 @@ There's also a convenience class method:
 RenderMePretty.result("/path/to/tempate.erb", a: 5)
 ```
 
+### Layout Support
+
+```ruby
+RenderMePretty.result("/path/to/tempate.erb", layout: "/path/to/layout.erb")
+```
+
 ### Custom Context
 
 ```ruby
