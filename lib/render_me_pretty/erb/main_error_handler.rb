@@ -12,5 +12,11 @@ class RenderMePretty::Erb
       end.first
       error_line.split(':')[1].to_i
     end
+
+    def error_in_layout?
+      # The first line of the backtrace has the template path that errored
+      error_info = @exception.backtrace[0]
+      error_info.include?(@layout_path) if @layout_path
+    end
   end
 end

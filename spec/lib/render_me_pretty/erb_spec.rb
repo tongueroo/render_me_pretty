@@ -92,7 +92,7 @@ describe RenderMePretty do
     it "shows the exact line of error in template" do
       out = erb.render(context)
       # puts out # uncomment to debug
-      expect(out).to include("1 <%= break_me_in_child %>")
+      expect(out).to include("2 <%= break_me_in_child %>")
     end
   end
 
@@ -107,6 +107,34 @@ describe RenderMePretty do
       out = erb.render(context)
       # puts out # uncomment to debug
       expect(out).to include("2 <%= break_me_in_parent %>")
+    end
+  end
+
+  context "invalid syntax child in layout" do
+    let(:erb) do
+      RenderMePretty::Erb.new(path, layout: layout)
+    end
+    let(:path) { "spec/fixtures/layout/invalid/child-bad-syntax.erb" }
+    let(:layout) { "spec/fixtures/layout/valid/parent.erb" }
+
+    it "shows the exact line of error in template" do
+      out = erb.render(context)
+      # puts out # uncomment to debug
+      expect(out).to include("<% if ENV[TEST %>")
+    end
+  end
+
+  context "invalid syntax parent layout" do
+    let(:erb) do
+      RenderMePretty::Erb.new(path, layout: layout)
+    end
+    let(:path) { "spec/fixtures/layout/valid/child.erb" }
+    let(:layout) { "spec/fixtures/layout/invalid/parent-bad-syntax.erb" }
+
+    it "shows the exact line of error in template" do
+      out = erb.render(context)
+      # puts out # uncomment to debug
+      expect(out).to include("<% if ENV[TEST %>")
     end
   end
 end

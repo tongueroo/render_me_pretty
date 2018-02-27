@@ -6,20 +6,8 @@ class RenderMePretty::Erb
       @layout_path = layout_path
     end
 
-    def error_in_layout?
-      # puts "=".colorize(:green) * 30
-      # puts "@exception.backtrace: "
-      # puts @exception.backtrace
-      # puts "=".colorize(:green) * 30
-
-      # The first line of the backtrace has the template path that errored
-      error_info = @exception.backtrace[0]
-      error_info.include?(@layout_path) if @layout_path
-    end
-
     def handle
       line_number = find_line_number
-      puts "line_number #{line_number}".colorize(:cyan)
       pretty_trace(line_number, full_message=true) # returns StringIO
     end
 
