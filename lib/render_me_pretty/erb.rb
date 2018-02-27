@@ -72,6 +72,7 @@ module RenderMePretty
         context.instance_variable_set('@' + key.to_s, value)
       end
 
+      # trim mode: https://searchcode.com/codesearch/view/77362792/
       template = Tilt::ERBTemplate.new(@path, trim: '-')
       begin
         template.render(context)
