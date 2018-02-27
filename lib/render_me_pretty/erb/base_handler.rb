@@ -1,8 +1,9 @@
 class RenderMePretty::Erb
   class BaseHandler
-    def initialize(path, exception)
-      @path = path
+    def initialize(exception, path, layout_path=nil)
       @exception = exception
+      @path = path
+      @layout_path = layout_path
     end
 
     def handle
@@ -16,13 +17,13 @@ class RenderMePretty::Erb
       message = full_message ? ": #{@exception.message}" : ""
       io.puts "#{@exception.class}#{message}".colorize(:red)
 
-      pretty_path = @path.sub(/^\.\//, '')
+      pretty_path = template_path_with_error.sub(/^\.\//, '')
       io.puts "Error evaluating ERB template around line #{error_line_number.to_s.colorize(:red)} of: #{pretty_path}:"
 
       context = 5 # lines of context
       top, bottom = [error_line_number-context-1, 0].max, error_line_number+context-1
 
-      lines = IO.read(@path).split("\n")
+      lines = IO.read(template_path_with_error).split("\n")
       spacing = lines.size.to_s.size
       lines[top..bottom].each_with_index do |line_content, index|
         current_line_number = top+index+1
@@ -35,6 +36,10 @@ class RenderMePretty::Erb
 
       io.puts backtrace_lines
       io
+    end
+
+    def template_path_with_error
+      error_in_layout? ? @layout_path : @path
     end
 
     # Method produces a filtered original stack trace that can be appended to
