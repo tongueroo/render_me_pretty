@@ -1,5 +1,7 @@
 # Render Me Pretty
 
+[![CircleCI](https://circleci.com/gh/tongueroo/render_me_pretty.svg?style=svg)](https://circleci.com/gh/tongueroo/render_me_pretty)
+
 Let's say you have an error in your ERB template:
 
 ```
