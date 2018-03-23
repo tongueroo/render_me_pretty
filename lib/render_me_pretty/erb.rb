@@ -73,17 +73,19 @@ module RenderMePretty
         context.instance_variable_set('@' + key.to_s, value)
       end
 
+      # https://github.com/gotar/dry-view/commit/39e3f96625bf90da2e51fb1fd437f18cedb9ae8c
+      tilt_options = {trim: '-', default_encoding: "utf-8"}
       if @layout_path
-        layout = Tilt::ERBTemplate.new(@layout_path, trim: '-')
+        layout = Tilt::ERBTemplate.new(@layout_path, tilt_options)
       else
         # trim mode: https://searchcode.com/codesearch/view/77362792/
-        template = Tilt::ERBTemplate.new(@path, trim: '-')
+        template = Tilt::ERBTemplate.new(@path, tilt_options)
       end
 
       begin
         if @layout_path
           layout.render(context) do
-            Tilt::ERBTemplate.new(@path, trim: '-').render(context)
+            Tilt::ERBTemplate.new(@path, tilt_options).render(context)
           end
         else
           template.render(context)

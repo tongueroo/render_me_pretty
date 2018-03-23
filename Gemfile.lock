@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    render_me_pretty (0.6.0)
+    render_me_pretty (0.8.0)
       activesupport
       colorize
       tilt
@@ -20,7 +20,7 @@ GEM
     i18n (0.9.5)
       concurrent-ruby (~> 1.0)
     minitest (5.11.3)
-    rake (12.3.0)
+    rake (12.3.1)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
