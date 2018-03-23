@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.8.1]
+- tilt default_encoding utf-8
+- update readme with layout support
+
 ## [0.8.0]
 - pull request #1 from tongueroo/layout-support
 
