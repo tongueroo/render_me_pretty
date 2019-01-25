@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.8.2]
+- use rainbow gem for terminal color
+
 ## [0.8.1]
 - tilt default_encoding utf-8
 - update readme with layout support
