@@ -15,10 +15,10 @@ class RenderMePretty::Erb
       io = StringIO.new
 
       message = full_message ? ": #{@exception.message}" : ""
-      io.puts "#{@exception.class}#{message}".colorize(:red)
+      io.puts "#{@exception.class}#{message}".color(:red)
 
       pretty_path = template_path_with_error.sub(/^\.\//, '')
-      io.puts "Error evaluating ERB template around line #{error_line_number.to_s.colorize(:red)} of: #{pretty_path}:"
+      io.puts "Error evaluating ERB template around line #{error_line_number.to_s.color(:red)} of: #{pretty_path}:"
 
       context = 5 # lines of context
       top, bottom = [error_line_number-context-1, 0].max, error_line_number+context-1
@@ -28,7 +28,7 @@ class RenderMePretty::Erb
       lines[top..bottom].each_with_index do |line_content, index|
         current_line_number = top+index+1
         if current_line_number == error_line_number
-          io.printf("%#{spacing}d %s\n".colorize(:red), current_line_number, line_content)
+          io.printf("%#{spacing}d %s\n".color(:red), current_line_number, line_content)
         else
           io.printf("%#{spacing}d %s\n", current_line_number, line_content)
         end
@@ -73,7 +73,7 @@ class RenderMePretty::Erb
           # render_me_pretty lines
         lines = lines[0..7] # keep 8 lines
       end
-      lines[0] = lines[0].colorize(:red)
+      lines[0] = lines[0].color(:red)
 
       # header
       lines.unshift "\nOriginal backtrace#{full ? '' : ' (last 8 lines)'}:"

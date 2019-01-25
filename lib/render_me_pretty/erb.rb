@@ -109,8 +109,8 @@ module RenderMePretty
     # Refer to specs and uncomment puts out to see the different types of errors.
     def handle_exception(e)
       # puts "*" * 30
-      # puts e.class.to_s.colorize(:cyan)
-      # puts e.message.colorize(:cyan)
+      # puts e.class.to_s.color(:cyan)
+      # puts e.message.color(:cyan)
       # puts e.backtrace
       # puts "*" * 30
       handler = e.is_a?(SyntaxError) ?
@@ -160,7 +160,7 @@ module RenderMePretty
           # render_me_pretty lines
         lines = lines[0..7] # keep 8 lines
       end
-      lines[0] = lines[0].colorize(:red)
+      lines[0] = lines[0].color(:red)
 
       # header
       lines.unshift "\nOriginal backtrace#{full ? '' : ' (last 8 lines)'}:"
