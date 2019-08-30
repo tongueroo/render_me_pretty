@@ -10,7 +10,13 @@ class RenderMePretty::Erb
       error_line = lines.select do |line|
         line.include?(template_path_with_error)
       end.first
-      error_line.split(':')[1].to_i
+
+      if error_line.nil?
+        puts "WARN: Unable to find line number. Fallback and print out full backtrace."
+        puts @exception.backtrace
+      else
+        error_line.split(':')[1].to_i
+      end
     end
 
     def error_in_layout?
