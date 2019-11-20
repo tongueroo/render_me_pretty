@@ -2,6 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/tongueroo/render_me_pretty.svg?style=svg)](https://circleci.com/gh/tongueroo/render_me_pretty)
 
+[![BoltOps Badge](https://img.boltops.com/boltops/badges/boltops-badge.png)](https://www.boltops.com)
+
 Let's say you have an error in your ERB template:
 
 ```
