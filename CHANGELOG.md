@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.8.4] - 2021-12-28
+- fix activesupport require
+
 ## [0.8.3]
 - add .circleci/config.yml
 - show full backtrace when error not found within users layout or project path
