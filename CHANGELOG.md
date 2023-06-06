@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [0.9.0] - 2023-06-06
+- [#2](https://github.com/tongueroo/render_me_pretty/pull/2) require tilt so EMPTY_HASH is defined
+- [#3](https://github.com/tongueroo/render_me_pretty/pull/3) CI: Github Actions Rspec
+- add github action badge
+- remove circleci
+
 ## [0.8.4] - 2021-12-28
 - fix activesupport require
 
