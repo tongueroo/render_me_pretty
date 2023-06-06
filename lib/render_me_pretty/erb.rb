@@ -39,6 +39,7 @@ If you want to use your own context object, pass it as a variable.  The context 
 The context will be `person`.  So person methods and instance variables will be available in the ERB templates.
 
 =end
+require 'tilt'
 require 'tilt/erb'
 
 module RenderMePretty
