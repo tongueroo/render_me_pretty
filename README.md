@@ -1,5 +1,7 @@
 # Render Me Pretty
 
+![workflow](https://github.com/tongueroo/render_me_pretty/actions/workflows/rspec.yml/badge.svg)
+
 [![BoltOps Badge](https://img.boltops.com/boltops/badges/boltops-badge.png)](https://www.boltops.com)
 
 Let's say you have an error in your ERB template:
