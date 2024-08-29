@@ -4,9 +4,9 @@ require "active_support/core_ext/string"
 require "rainbow/ext/string"
 
 module RenderMePretty
-  autoload :Erb, 'render_me_pretty/erb'
+  autoload :Erb, "render_me_pretty/erb"
 
-  def result(path, variables={})
+  def result(path, variables = {})
     erb = Erb.new(path, variables)
     erb.render
   end

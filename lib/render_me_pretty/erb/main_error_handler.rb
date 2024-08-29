@@ -15,7 +15,7 @@ class RenderMePretty::Erb
         puts "WARN: Unable to find line number. Fallback and print out full backtrace."
         puts @exception.backtrace
       else
-        error_line.split(':')[1].to_i
+        error_line.split(":")[1].to_i
       end
     end
 

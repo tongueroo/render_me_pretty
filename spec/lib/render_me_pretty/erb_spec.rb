@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe RenderMePretty do
   let(:context) { TestContext.new }
@@ -58,10 +58,10 @@ describe RenderMePretty do
         # puts out
         # spec/fixtures/invalid/syntax.erb:2: syntax error, unexpected ';', expecting ']'
         # );  if ENV['TEST' ; _erbout.<<(-" missing ending...
-                          # ^
+        # ^
         # spec/fixtures/invalid/syntax.erb:12: syntax error, unexpected keyword_end, expecting end-of-input
         # end;end;end;end
-                    # ^~~
+        # ^~~
         expect(out).to include("ENV['TEST' ")
       end
     end
