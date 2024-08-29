@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project *tries* to adhere to [Semantic Versioning](http://semver.org/), even before v1.0.
 
+## [1.0.0] - 2024-08-29
+- [#5](https://github.com/tongueroo/render_me_pretty/pull/5) Standardrb
+- [#6](https://github.com/tongueroo/render_me_pretty/pull/6) add mit license
+- [#7](https://github.com/tongueroo/render_me_pretty/pull/7) on_error config option error exit or raise
+
 ## [0.9.0] - 2023-06-06
 - [#2](https://github.com/tongueroo/render_me_pretty/pull/2) require tilt so EMPTY_HASH is defined
 - [#3](https://github.com/tongueroo/render_me_pretty/pull/3) CI: Github Actions Rspec
