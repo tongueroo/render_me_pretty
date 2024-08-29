@@ -89,12 +89,8 @@ module RenderMePretty
         else
           template.render(context)
         end
-      rescue Exception => e
-        if e.instance_of?(SystemExit) # allow exit to happen normally
-          raise
-        else
-          handle_exception(e)
-        end
+      rescue StandardError, ScriptError => e
+        handle_exception(e)
       end
     end
 
