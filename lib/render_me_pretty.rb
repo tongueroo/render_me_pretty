@@ -11,5 +11,8 @@ module RenderMePretty
     erb.render
   end
 
+  mattr_accessor :on_error
+  self.on_error = :exit # :exit or :raise
+
   extend self
 end

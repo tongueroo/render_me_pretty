@@ -120,7 +120,11 @@ module RenderMePretty
         io.string
       else
         puts io.string
-        exit 1
+        if RenderMePretty.on_error.to_sym == :exit
+          exit 1
+        else
+          raise
+        end
       end
     end
 
