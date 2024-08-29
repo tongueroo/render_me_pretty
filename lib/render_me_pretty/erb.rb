@@ -90,7 +90,7 @@ module RenderMePretty
           template.render(context)
         end
       rescue Exception => e
-        if e.class == SystemExit # allow exit to happen normally
+        if e.instance_of?(SystemExit) # allow exit to happen normally
           raise
         else
           handle_exception(e)
@@ -143,10 +143,9 @@ module RenderMePretty
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:81:in `each'
     def backtrace_lines(e)
       full = ENV["FULL_BACKTRACE"]
+      lines = e.backtrace
       if full
-        lines = e.backtrace
       else
-        lines = e.backtrace
         # This filtering business makes is hiding useful info.
         # Think it was needed for ERB but Tilt provides a better stack trace.
         # Commenting out for now.

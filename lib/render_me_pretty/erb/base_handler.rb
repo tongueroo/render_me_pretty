@@ -8,7 +8,7 @@ class RenderMePretty::Erb
 
     def handle
       line_number = find_line_number
-      pretty_trace(line_number, full_message = true) # returns StringIO
+      pretty_trace(line_number, true) # returns StringIO
     end
 
     def pretty_trace(error_line_number, full_message = true)
@@ -57,10 +57,9 @@ class RenderMePretty::Erb
     #   /Users/tung/src/tongueroo/lono/lib/lono/template/dsl.rb:81:in `each'
     def backtrace_lines
       full = ENV["FULL_BACKTRACE"]
+      lines = @exception.backtrace
       if full
-        lines = @exception.backtrace
       else
-        lines = @exception.backtrace
         # This filtering business makes is hiding useful info.
         # Think it was needed for ERB but Tilt provides a better stack trace.
         # Commenting out for now.
