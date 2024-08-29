@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
 
   spec.summary = "Render ERB template and provide more useful message pointing out the line with the error in the view"
   spec.homepage = "https://github.com/tongueroo/render_me_pretty"
+  spec.license = "MIT"
 
   spec.files = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
